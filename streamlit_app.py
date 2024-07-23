@@ -1,6 +1,5 @@
 # Import python packages
 import streamlit as st
-from snowflake.snowpark.context import get_active_session
 from snowflake.snowpark.functions import col
 
 # Write directly to the app
@@ -15,10 +14,11 @@ st.write(
 title = st.text_input("Name on Smoothie: ", "")
 st.write("The name on your smoothie will be:", title)
 
-# Get the current credentials
-session = get_active_session()
+# connect
+cnx = st.connection("Snowflake")
+session = cnx.session()
+
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
-# st.dataframe(data=my_dataframe, use_container_width=True)
 
 ingredients_list = st.multiselect(
     "choose up to 5 ingredients: "
