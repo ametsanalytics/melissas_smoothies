@@ -15,7 +15,7 @@ title = st.text_input("Name on Smoothie: ", "")
 st.write("The name on your smoothie will be:", title)
 
 # connect
-cnx = st.connection("Snowflake")
+cnx = st.connection("snowflake")
 session = cnx.session()
 
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
