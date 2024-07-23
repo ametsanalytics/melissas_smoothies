@@ -23,8 +23,6 @@ session = cnx.session()
 # create dataframe for to use in ingredients list
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('SEARCH_ON'))
 
-st.stop()
-
 # create ingredients list
 ingredients_list = st.multiselect(
     "choose up to 5 ingredients: "
