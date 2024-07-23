@@ -36,7 +36,8 @@ if ingredients_list:
     
     for fruit_chosen in ingredients_list:
             ingredients_string += fruit_chosen + ' '
-            fruityvice_response = requests.get("https://fruityvice.com/api/fruit/watermelon")
+            st.subheader(fruit_chosen + 'Nutritional Information')
+            fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_chosen)
             fv_df = st.dataframe(data=fruityvice_response.json(), use_container_width = True)
 
 # create variable for inserting data into orders table if not null
@@ -53,4 +54,3 @@ if ingredients_list:
         session.sql(my_insert_stmt).collect()
         st.success('Your smoothie is ordered! '+ title, icon="✅")
 
-# display nutritional infomation from fruityvice
