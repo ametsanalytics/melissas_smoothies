@@ -29,13 +29,35 @@ my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT
 # convert Snowpark datafram to pandas dataframe for loc function
 pd_df = my_dataframe.to_pandas()
 #st.dataframe(pd_df)
+def get_valid_fruit_names():
+  """Fetches fruit names from Fruityvice API and filters based on SQL database"""
 
+  # Fetch fruit names from Fruityvice API
+  url = "https://fruityvice.com/api/fruit/all"
+  response = requests.get(url)
+  if response.status_code == 200:
+    api_fruit_names = [fruit["name"] for fruit in response.json()]
+  else:
+    # Handle API error
+    return []
+
+  # Fetch fruit names from SQL database
+  sql_fruit_names = session.sql("SELECT FRUIT_NAME FROM smoothies.public.fruit_options").collect_as_pandas()["SEARCH_ON"].tolist()
+
+  # Find the intersection of both lists
+  valid_fruit_names = list(set(api_fruit_names) & set(sql_fruit_names))
+  return valid_fruit_names
+
+# Get valid fruit names
+valid_fruits = get_valid_fruit_names()
+    
+max_selections = 5
 
 # create ingredients list
 ingredients_list = st.multiselect(
     "choose up to 5 ingredients: "
-    , my_dataframe
-    , max_selections=5
+    , valid_fruits
+    , max_selections=max_selections
 )
 
 # create conditional loop for sending requests to database
